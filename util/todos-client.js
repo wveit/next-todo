@@ -13,3 +13,8 @@ export async function postTodo(todo) {
     });
     return await response.json();
 }
+
+export async function deleteTodo(todoId) {
+    const response = await fetch(`/api/todos/${todoId}`, { method: 'DELETE' });
+    return await response.json();
+}
