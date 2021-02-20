@@ -14,6 +14,8 @@ export function NewTodoForm({ onNewTodo }) {
     }
 
     function handleSubmit() {
+        if (title.trim() === '') return;
+
         onNewTodo && onNewTodo({ title });
         setTitle('');
     }
