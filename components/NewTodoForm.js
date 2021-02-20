@@ -14,7 +14,7 @@ export function NewTodoForm({ onNewTodo }) {
     }
 
     function handleSubmit() {
-        onNewTodo && onNewTodo(title);
+        onNewTodo && onNewTodo({ title });
         setTitle('');
     }
 

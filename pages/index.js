@@ -7,10 +7,7 @@ export default function Home() {
     const [todos, setTodos] = useState([]);
 
     function handleNewTodo(todo) {
-        const newTodo = {
-            id: Date.now(),
-            title: todo,
-        };
+        const newTodo = { ...todo, id: Date.now() };
 
         setTodos([...todos, newTodo]);
     }
