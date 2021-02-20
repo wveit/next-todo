@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
 
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/test';
+
 export function mongooseTodoMiddleware(req, res, next) {
     mongoose.connect(
-        'mongodb://localhost:27017/test',
+        MONGO_URI,
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,
