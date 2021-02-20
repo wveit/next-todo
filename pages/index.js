@@ -15,7 +15,6 @@ export default function Home() {
     useEffect(() => {
         (async function () {
             const todos = await getTodos();
-            console.log('todos: ', todos);
             setTodos(todos);
         })();
     }, []);
