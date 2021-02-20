@@ -3,12 +3,19 @@ import { useState } from 'react';
 export function NewTodoForm({ onNewTodo }) {
     const [title, setTitle] = useState('');
 
+    function handleKeyUp(event) {
+        if (event.key === 'Enter') {
+            handleSubmit();
+        }
+    }
+
     function handleTitleChange(event) {
         setTitle(event.target.value);
     }
 
-    function handleNewTodo() {
+    function handleSubmit() {
         onNewTodo && onNewTodo(title);
+        setTitle('');
     }
 
     return (
@@ -19,8 +26,10 @@ export function NewTodoForm({ onNewTodo }) {
                 name='title'
                 placeholder='Enter title here'
                 onChange={handleTitleChange}
+                onKeyUp={handleKeyUp}
+                value={title}
             />
-            <button onClick={handleNewTodo}>Submit</button>
+            <button onClick={handleSubmit}>Submit</button>
         </div>
     );
 }
