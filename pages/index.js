@@ -1,16 +1,24 @@
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NewTodoForm } from '../components/NewTodoForm';
 import { TodoList } from '../components/TodoList';
+import { getTodos, postTodo } from '../util/todos-api';
 
 export default function Home() {
     const [todos, setTodos] = useState([]);
 
-    function handleNewTodo(todo) {
-        const newTodo = { ...todo, id: Date.now() };
-
-        setTodos([...todos, newTodo]);
+    async function handleNewTodo(todo) {
+        const todos = await postTodo(todo);
+        setTodos(todos);
     }
+
+    useEffect(() => {
+        (async function () {
+            const todos = await getTodos();
+            console.log('todos: ', todos);
+            setTodos(todos);
+        })();
+    }, []);
 
     return (
         <>
