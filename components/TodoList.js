@@ -8,7 +8,3 @@ export function TodoList({ todos }) {
         </div>
     );
 }
-
-TodoList.defaultProps = {
-    todos: [],
-};
