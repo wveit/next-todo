@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { NewTodoForm } from '../components/NewTodoForm';
 import { TodoList } from '../components/TodoList';
-import { getTodos, postTodo } from '../util/todos-api';
+import { getTodos, postTodo } from '../util/todos-client';
 
 export default function Home() {
     const [todos, setTodos] = useState([]);
