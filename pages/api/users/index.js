@@ -10,7 +10,7 @@ handler.post(async (req, res) => {
 
     const errors = await validateInputs({ username, email, password });
     if (errors) {
-        return res.status(400).json(errors);
+        return res.status(400).json({ errors });
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
