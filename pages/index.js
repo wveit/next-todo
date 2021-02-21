@@ -29,14 +29,29 @@ function useTodos() {
 
 export default function Home() {
     const { todos, handleNewTodo, handleDeleteTodo } = useTodos();
+    const [authForm, setAuthForm] = useState(null);
 
     return (
         <>
             <Head>
                 <title>Todo App</title>
             </Head>
-            <NewTodoForm onNewTodo={handleNewTodo} />
-            <TodoList todos={todos} onDelete={handleDeleteTodo} />
+            <header>
+                <h1>Todo App</h1>
+                <div>
+                    <button onClick={() => setAuthForm('sign-in')}>
+                        Sign In
+                    </button>
+                    <button onClick={() => setAuthForm('register')}>
+                        Register
+                    </button>
+                </div>
+            </header>
+            <main>
+                <p>Auth Form: {authForm}</p>
+                <NewTodoForm onNewTodo={handleNewTodo} />
+                <TodoList todos={todos} onDelete={handleDeleteTodo} />
+            </main>
         </>
     );
 }

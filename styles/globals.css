@@ -28,3 +28,16 @@ a {
 .Todo__deleteButton {
     background-color: red;
 }
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: black;
+    color: white;
+    padding: 0 2em;
+}
+
+main {
+    padding: 0 2em;
+}
