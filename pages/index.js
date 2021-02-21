@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 import { NewTodoForm } from '../components/NewTodoForm';
 import { TodoList } from '../components/TodoList';
 import { getTodos, postTodo, deleteTodo } from '../util/todos-client';
+import { SignInForm } from '../components/SignInForm';
+import { RegisterForm } from '../components/RegisterForm';
+import { AuthButtons } from '../components/AuthButtons';
 
 function useTodos() {
     const [todos, setTodos] = useState([]);
@@ -30,6 +33,7 @@ function useTodos() {
 export default function Home() {
     const { todos, handleNewTodo, handleDeleteTodo } = useTodos();
     const [authForm, setAuthForm] = useState(null);
+    const [user, setUser] = useState(null);
 
     return (
         <>
@@ -38,17 +42,26 @@ export default function Home() {
             </Head>
             <header>
                 <h1>Todo App</h1>
-                <div>
-                    <button onClick={() => setAuthForm('sign-in')}>
-                        Sign In
-                    </button>
-                    <button onClick={() => setAuthForm('register')}>
-                        Register
-                    </button>
-                </div>
+                <AuthButtons
+                    username={user && user.username}
+                    onSignIn={() => setAuthForm('SIGN_IN')}
+                    onRegister={() => setAuthForm('REGISTER')}
+                    onSignOut={() => setUser(null)}
+                />
             </header>
             <main>
-                <p>Auth Form: {authForm}</p>
+                {authForm === 'SIGN_IN' ? (
+                    <SignInForm
+                        onCancel={() => setAuthForm(null)}
+                        onSuccessfulSignIn={(user) => setUser(user)}
+                    />
+                ) : null}
+                {authForm === 'REGISTER' ? (
+                    <RegisterForm
+                        onCancel={() => setAuthForm(null)}
+                        onSuccessfulRegister={(user) => setUser(user)}
+                    />
+                ) : null}
                 <NewTodoForm onNewTodo={handleNewTodo} />
                 <TodoList todos={todos} onDelete={handleDeleteTodo} />
             </main>
