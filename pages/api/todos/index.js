@@ -1,5 +1,5 @@
 import nc from 'next-connect';
-import { mongooseTodoMiddleware } from '../../middleware/db-middleware';
+import { mongooseTodoMiddleware } from '../../../middleware/db-middleware';
 
 const handler = nc();
 
