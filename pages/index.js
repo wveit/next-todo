@@ -9,18 +9,18 @@ export default function Home() {
 
     async function handleNewTodo(todo) {
         const todos = await postTodo(todo);
-        setTodos(todos);
+        if (!todos.errors) setTodos(todos);
     }
 
     async function handleDelete(todoId) {
         const todos = await deleteTodo(todoId);
-        setTodos(todos);
+        if (!todos.errors) setTodos(todos);
     }
 
     useEffect(() => {
         (async function () {
             const todos = await getTodos();
-            setTodos(todos);
+            if (!todos.errors) setTodos(todos);
         })();
     }, []);
 
