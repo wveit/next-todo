@@ -4,7 +4,7 @@ import { NewTodoForm } from '../components/NewTodoForm';
 import { TodoList } from '../components/TodoList';
 import { getTodos, postTodo, deleteTodo } from '../util/todos-client';
 
-export default function Home() {
+function useTodos() {
     const [todos, setTodos] = useState([]);
 
     async function handleNewTodo(todo) {
@@ -12,7 +12,7 @@ export default function Home() {
         if (!todos.errors) setTodos(todos);
     }
 
-    async function handleDelete(todoId) {
+    async function handleDeleteTodo(todoId) {
         const todos = await deleteTodo(todoId);
         if (!todos.errors) setTodos(todos);
     }
@@ -24,13 +24,19 @@ export default function Home() {
         })();
     }, []);
 
+    return { todos, handleNewTodo, handleDeleteTodo };
+}
+
+export default function Home() {
+    const { todos, handleNewTodo, handleDeleteTodo } = useTodos();
+
     return (
         <>
             <Head>
                 <title>Todo App</title>
             </Head>
             <NewTodoForm onNewTodo={handleNewTodo} />
-            <TodoList todos={todos} onDelete={handleDelete} />
+            <TodoList todos={todos} onDelete={handleDeleteTodo} />
         </>
     );
 }
