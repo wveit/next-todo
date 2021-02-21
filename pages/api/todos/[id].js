@@ -1,15 +1,13 @@
 import nc from 'next-connect';
-import { mongooseTodoMiddleware } from '../../../middleware/db-middleware';
+import { Todo } from '../../../db/Todo';
 
 const handler = nc();
-
-handler.use(mongooseTodoMiddleware);
 
 handler.delete(async (req, res) => {
     const id = req.query.id;
     console.log('deleting id: ', id);
-    await req.db.Todo.deleteOne({ _id: id });
-    const todos = await req.db.Todo.find();
+    await Todo.deleteOne({ _id: id });
+    const todos = await Todo.find();
     res.json(todos);
 });
 

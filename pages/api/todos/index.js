@@ -1,18 +1,16 @@
 import nc from 'next-connect';
-import { mongooseTodoMiddleware } from '../../../middleware/db-middleware';
+import { Todo } from '../../../db/Todo';
 
 const handler = nc();
 
-handler.use(mongooseTodoMiddleware);
-
 handler.get(async (req, res) => {
-    const todos = await req.db.Todo.find();
+    const todos = await Todo.find();
     res.json(todos);
 });
 
 handler.post(async (req, res) => {
-    await req.db.Todo.create(req.body);
-    const todos = await req.db.Todo.find();
+    await Todo.create(req.body);
+    const todos = await Todo.find();
     res.json(todos);
 });
 
