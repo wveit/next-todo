@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { registerAndGetUser } from '../util/users-client';
 
 const defaultFields = {
     username: '',
@@ -16,37 +17,14 @@ export function RegisterForm({ onCancel, onSuccessfulRegister }) {
     }
 
     async function handleSubmit() {
-        let response = await fetch('/api/users', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(fields),
-        });
-        let responseObj = await response.json();
-        if (responseObj.errors) {
-            setErrors(responseObj.errors);
+        const { errors, user } = await registerAndGetUser(fields);
+        if (errors) {
+            setErrors(errors);
             return;
+        } else {
+            onSuccessfulRegister(user);
+            onCancel();
         }
-        const { token } = responseObj;
-
-        response = await fetch('/api/users/me', {
-            headers: {
-                'x-auth-token': token,
-            },
-        });
-        responseObj = await response.json();
-        if (responseObj.errors) {
-            setErrors({ meEndpoint: '/api/users/me failed' });
-            return;
-        }
-
-        const { username, email } = responseObj;
-
-        const user = { username, email, token };
-
-        onSuccessfulRegister(user);
-        onCancel();
     }
 
     return (

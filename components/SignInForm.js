@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { signInAndGetUser } from '../util/users-client';
 
 const defaultFields = {
     email: '',
@@ -15,37 +16,14 @@ export function SignInForm({ onCancel, onSuccessfulSignIn }) {
     }
 
     async function handleSubmit() {
-        let response = await fetch('/api/users/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(fields),
-        });
-        let responseObj = await response.json();
-        if (responseObj.errors) {
-            setErrors(responseObj.errors);
+        const { errors, user } = await signInAndGetUser(fields);
+        if (errors) {
+            setErrors(errors);
             return;
+        } else {
+            onSuccessfulSignIn(user);
+            onCancel();
         }
-        const { token } = responseObj;
-
-        response = await fetch('/api/users/me', {
-            headers: {
-                'x-auth-token': token,
-            },
-        });
-        responseObj = await response.json();
-        if (responseObj.errors) {
-            setErrors({ meEndpoint: '/api/users/me failed' });
-            return;
-        }
-
-        const { username, email } = responseObj;
-
-        const user = { username, email, token };
-
-        onSuccessfulSignIn(user);
-        onCancel();
     }
 
     return (

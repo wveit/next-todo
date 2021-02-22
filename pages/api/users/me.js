@@ -26,8 +26,10 @@ handler.get(async (req, res) => {
     const { username, email } = user;
 
     res.json({
-        username,
-        email,
+        user: {
+            username,
+            email,
+        },
     });
 });
 
