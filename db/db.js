@@ -8,6 +8,7 @@ export async function ensureMongooseIsConnected() {
             await mongoose.connect(MONGO_URI, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
+                useFindAndModify: false,
             });
             console.log('ensureMongooseIsConnected(): Connected to db');
         } catch (error) {
