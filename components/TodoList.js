@@ -1,7 +1,7 @@
-export function TodoList({ todos, onDelete, onUpdate }) {
+export function TodoList({ title, todos, onDelete, onUpdate }) {
     return (
         <div className='TodoList'>
-            <h3>Todo List</h3>
+            <h3>{title}</h3>
             {todos.map((todo) => (
                 <Todo
                     key={todo.id}

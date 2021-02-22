@@ -55,6 +55,12 @@ export default function Home() {
         handleTodoUpdate,
     } = useTodos(token);
 
+    const categorizedTodos = { active: [], done: [] };
+    todos.forEach((todo) => {
+        if (todo.dateCompleted) categorizedTodos.done.push(todo);
+        else categorizedTodos.active.push(todo);
+    });
+
     return (
         <>
             <Head>
@@ -86,7 +92,14 @@ export default function Home() {
                     <>
                         <NewTodoForm onNewTodo={handleNewTodo} />
                         <TodoList
-                            todos={todos}
+                            title='Active'
+                            todos={categorizedTodos.active}
+                            onDelete={handleDeleteTodo}
+                            onUpdate={handleTodoUpdate}
+                        />
+                        <TodoList
+                            title='Done'
+                            todos={categorizedTodos.done}
                             onDelete={handleDeleteTodo}
                             onUpdate={handleTodoUpdate}
                         />
