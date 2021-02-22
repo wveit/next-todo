@@ -8,6 +8,7 @@ if (!Todo) {
     const todoSchema = mongoose.Schema({
         title: String,
         owner: mongoose.ObjectId,
+        dateCreated: { type: Date, default: Date.now },
         dateCompleted: Date,
     });
     todoSchema.set('toJSON', {
