@@ -27,12 +27,9 @@ function useTodos(token) {
         if (!todos.errors) setTodos(todos);
     }
 
-    async function handleTodoDone(todoId, isDone) {
+    async function handleTodoUpdate(todoId, update) {
         if (!token) return;
-        const oldTodo = todos.find((todo) => todo.id === todoId);
-        if (!oldTodo) return;
-        const newTodo = { ...oldTodo, isDone };
-        const updatedTodos = await updateTodo(newTodo, token);
+        const updatedTodos = await updateTodo(todoId, update, token);
         if (!todos.errors) setTodos(updatedTodos);
     }
 
@@ -44,16 +41,19 @@ function useTodos(token) {
         })();
     }, [token]);
 
-    return { todos, handleNewTodo, handleDeleteTodo, handleTodoDone };
+    return { todos, handleNewTodo, handleDeleteTodo, handleTodoUpdate };
 }
 
 export default function Home() {
     const [authForm, setAuthForm] = useState(null);
     const [user, setUser] = useState(null);
     const token = user && user.token;
-    const { todos, handleNewTodo, handleDeleteTodo, handleTodoDone } = useTodos(
-        token
-    );
+    const {
+        todos,
+        handleNewTodo,
+        handleDeleteTodo,
+        handleTodoUpdate,
+    } = useTodos(token);
 
     return (
         <>
@@ -88,7 +88,7 @@ export default function Home() {
                         <TodoList
                             todos={todos}
                             onDelete={handleDeleteTodo}
-                            onDone={handleTodoDone}
+                            onUpdate={handleTodoUpdate}
                         />
                     </>
                 ) : null}

@@ -1,4 +1,4 @@
-export function TodoList({ todos, onDelete, onDone }) {
+export function TodoList({ todos, onDelete, onUpdate }) {
     return (
         <div className='TodoList'>
             <h3>Todo List</h3>
@@ -7,27 +7,28 @@ export function TodoList({ todos, onDelete, onDone }) {
                     key={todo.id}
                     todo={todo}
                     onDelete={onDelete}
-                    onDone={onDone}
+                    onUpdate={onUpdate}
                 />
             ))}
         </div>
     );
 }
 
-export function Todo({ todo, onDelete, onDone }) {
+export function Todo({ todo, onDelete, onUpdate }) {
     function handleDelete() {
         onDelete(todo.id);
     }
 
     function handleDone() {
-        onDone(todo.id, !todo.isDone);
+        if (todo.dateCompleted) onUpdate(todo.id, { dateCompleted: null });
+        else onUpdate(todo.id, { dateCompleted: Date.now() });
     }
 
     return (
         <div className='Todo'>
             <input
                 type='checkbox'
-                checked={!!todo.isDone}
+                checked={!!todo.dateCompleted}
                 onClick={handleDone}
                 className='Todo__doneButton'
             />

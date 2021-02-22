@@ -37,18 +37,10 @@ handler.put(async (req, res) => {
             .json({ errors: { token: 'Must provide valid token' } });
     }
 
-    const inputTodo = req.body;
-    if (inputTodo.owner !== userId) {
-        console.error(
-            `Error /api/todos/update: ${inputTodo.owner} does not equal ${userId}`
-        );
-        return res
-            .status(400)
-            .json({ errors: { token: 'Token does not match todo' } });
-    }
+    const updates = req.body;
 
     const id = req.query.id;
-    await Todo.findOneAndUpdate({ _id: id }, inputTodo);
+    await Todo.findOneAndUpdate({ _id: id, owner: userId }, updates);
     const todos = await Todo.find({ owner: userId });
     res.json(todos);
 });
