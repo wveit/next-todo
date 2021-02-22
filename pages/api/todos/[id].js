@@ -25,7 +25,6 @@ handler.delete(async (req, res) => {
 });
 
 handler.put(async (req, res) => {
-    console.log('called');
     let userId;
     try {
         const token = req.headers['x-auth-token'];
@@ -51,7 +50,6 @@ handler.put(async (req, res) => {
     const id = req.query.id;
     await Todo.findOneAndUpdate({ _id: id }, inputTodo);
     const todos = await Todo.find({ owner: userId });
-    console.log('todos: ', JSON.stringify(todos));
     res.json(todos);
 });
 
