@@ -5,7 +5,10 @@ ensureMongooseIsConnected();
 
 let Todo = mongoose.models.Todo;
 if (!Todo) {
-    const todoSchema = mongoose.Schema({ title: String });
+    const todoSchema = mongoose.Schema({
+        title: String,
+        owner: mongoose.ObjectId,
+    });
     todoSchema.set('toJSON', {
         virtuals: true,
         versionKey: false,

@@ -16,12 +16,12 @@ handler.get(async (req, res) => {
     try {
         id = jwt.verify(token, '<<<JWT_SECRET>>>').id;
     } catch (error) {
-        return res.status(400).json({ errors: { token: error.message } });
+        return res
+            .status(400)
+            .json({ errors: { token: 'Must provide valid token' } });
     }
-    console.log('id: ', id);
 
     const user = await User.findById(id);
-    console.log('user: ', user);
     const { username, email } = user;
 
     res.json({

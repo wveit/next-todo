@@ -7,33 +7,37 @@ import { SignInForm } from '../components/SignInForm';
 import { RegisterForm } from '../components/RegisterForm';
 import { AuthButtons } from '../components/AuthButtons';
 
-function useTodos() {
+function useTodos(token) {
     const [todos, setTodos] = useState([]);
 
     async function handleNewTodo(todo) {
-        const todos = await postTodo(todo);
+        if (!token) return;
+        const todos = await postTodo(todo, token);
         if (!todos.errors) setTodos(todos);
     }
 
     async function handleDeleteTodo(todoId) {
-        const todos = await deleteTodo(todoId);
+        if (!token) return;
+        const todos = await deleteTodo(todoId, token);
         if (!todos.errors) setTodos(todos);
     }
 
     useEffect(() => {
         (async function () {
-            const todos = await getTodos();
+            if (!token) return;
+            const todos = await getTodos(token);
             if (!todos.errors) setTodos(todos);
         })();
-    }, []);
+    }, [token]);
 
     return { todos, handleNewTodo, handleDeleteTodo };
 }
 
 export default function Home() {
-    const { todos, handleNewTodo, handleDeleteTodo } = useTodos();
     const [authForm, setAuthForm] = useState(null);
     const [user, setUser] = useState(null);
+    const token = user && user.token;
+    const { todos, handleNewTodo, handleDeleteTodo } = useTodos(token);
 
     return (
         <>
@@ -62,8 +66,12 @@ export default function Home() {
                         onSuccessfulRegister={(user) => setUser(user)}
                     />
                 ) : null}
-                <NewTodoForm onNewTodo={handleNewTodo} />
-                <TodoList todos={todos} onDelete={handleDeleteTodo} />
+                {user ? (
+                    <>
+                        <NewTodoForm onNewTodo={handleNewTodo} />
+                        <TodoList todos={todos} onDelete={handleDeleteTodo} />
+                    </>
+                ) : null}
             </main>
         </>
     );
