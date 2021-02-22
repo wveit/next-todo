@@ -8,6 +8,7 @@ if (!Todo) {
     const todoSchema = mongoose.Schema({
         title: String,
         owner: mongoose.ObjectId,
+        isDone: { type: Boolean, default: false },
     });
     todoSchema.set('toJSON', {
         virtuals: true,

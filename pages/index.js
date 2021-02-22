@@ -2,7 +2,12 @@ import Head from 'next/head';
 import { useState, useEffect } from 'react';
 import { NewTodoForm } from '../components/NewTodoForm';
 import { TodoList } from '../components/TodoList';
-import { getTodos, postTodo, deleteTodo } from '../util/todos-client';
+import {
+    getTodos,
+    postTodo,
+    deleteTodo,
+    updateTodo,
+} from '../util/todos-client';
 import { SignInForm } from '../components/SignInForm';
 import { RegisterForm } from '../components/RegisterForm';
 import { AuthButtons } from '../components/AuthButtons';
@@ -22,6 +27,15 @@ function useTodos(token) {
         if (!todos.errors) setTodos(todos);
     }
 
+    async function handleTodoDone(todoId, isDone) {
+        if (!token) return;
+        const oldTodo = todos.find((todo) => todo.id === todoId);
+        if (!oldTodo) return;
+        const newTodo = { ...oldTodo, isDone };
+        const updatedTodos = await updateTodo(newTodo, token);
+        if (!todos.errors) setTodos(updatedTodos);
+    }
+
     useEffect(() => {
         (async function () {
             if (!token) return;
@@ -30,14 +44,16 @@ function useTodos(token) {
         })();
     }, [token]);
 
-    return { todos, handleNewTodo, handleDeleteTodo };
+    return { todos, handleNewTodo, handleDeleteTodo, handleTodoDone };
 }
 
 export default function Home() {
     const [authForm, setAuthForm] = useState(null);
     const [user, setUser] = useState(null);
     const token = user && user.token;
-    const { todos, handleNewTodo, handleDeleteTodo } = useTodos(token);
+    const { todos, handleNewTodo, handleDeleteTodo, handleTodoDone } = useTodos(
+        token
+    );
 
     return (
         <>
@@ -69,7 +85,11 @@ export default function Home() {
                 {user ? (
                     <>
                         <NewTodoForm onNewTodo={handleNewTodo} />
-                        <TodoList todos={todos} onDelete={handleDeleteTodo} />
+                        <TodoList
+                            todos={todos}
+                            onDelete={handleDeleteTodo}
+                            onDone={handleTodoDone}
+                        />
                     </>
                 ) : null}
             </main>

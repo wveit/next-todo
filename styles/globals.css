@@ -18,15 +18,20 @@ a {
 .Todo {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     width: 400px;
     padding: 0.5em;
     border: 1px solid gray;
     border-radius: 3px;
 }
 
+.Todo__title {
+    margin-left: 1em;
+}
+
 .Todo__deleteButton {
     background-color: red;
+    margin-left: auto;
 }
 
 header {

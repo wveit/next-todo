@@ -24,4 +24,35 @@ handler.delete(async (req, res) => {
     res.json(todos);
 });
 
+handler.put(async (req, res) => {
+    console.log('called');
+    let userId;
+    try {
+        const token = req.headers['x-auth-token'];
+        const payload = jwt.verify(token, JWT_SECRET);
+        userId = payload.id;
+    } catch (error) {
+        console.error('Error /api/todos/update: ', error.message);
+        return res
+            .status(400)
+            .json({ errors: { token: 'Must provide valid token' } });
+    }
+
+    const inputTodo = req.body;
+    if (inputTodo.owner !== userId) {
+        console.error(
+            `Error /api/todos/update: ${inputTodo.owner} does not equal ${userId}`
+        );
+        return res
+            .status(400)
+            .json({ errors: { token: 'Token does not match todo' } });
+    }
+
+    const id = req.query.id;
+    await Todo.findOneAndUpdate({ _id: id }, inputTodo);
+    const todos = await Todo.find({ owner: userId });
+    console.log('todos: ', JSON.stringify(todos));
+    res.json(todos);
+});
+
 export default handler;

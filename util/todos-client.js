@@ -24,3 +24,15 @@ export async function deleteTodo(todoId, token) {
     });
     return await response.json();
 }
+
+export async function updateTodo(todo, token) {
+    const response = await fetch(`/api/todos/${todo.id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': token,
+        },
+        body: JSON.stringify(todo),
+    });
+    return await response.json();
+}
