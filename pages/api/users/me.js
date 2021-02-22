@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { User } from '../../../db/User';
 
 const handler = nc();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 handler.get(async (req, res) => {
     const token = req.headers['x-auth-token'];
@@ -14,7 +15,7 @@ handler.get(async (req, res) => {
 
     let id;
     try {
-        id = jwt.verify(token, '<<<JWT_SECRET>>>').id;
+        id = jwt.verify(token, JWT_SECRET).id;
     } catch (error) {
         return res
             .status(400)

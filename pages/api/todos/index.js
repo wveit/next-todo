@@ -3,12 +3,13 @@ import { Todo } from '../../../db/Todo';
 import jwt from 'jsonwebtoken';
 
 const handler = nc();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 handler.get(async (req, res) => {
     let userId;
     try {
         const token = req.headers['x-auth-token'];
-        const payload = jwt.verify(token, '<<<JWT_SECRET>>>');
+        const payload = jwt.verify(token, JWT_SECRET);
         userId = payload.id;
     } catch (error) {
         console.error(error.message);
@@ -25,7 +26,7 @@ handler.post(async (req, res) => {
     let userId;
     try {
         const token = req.headers['x-auth-token'];
-        const payload = jwt.verify(token, '<<<JWT_SECRET>>>');
+        const payload = jwt.verify(token, JWT_SECRET);
         userId = payload.id;
     } catch (error) {
         console.error(error.message);

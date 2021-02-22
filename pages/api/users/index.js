@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 const handler = nc();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 handler.post(async (req, res) => {
     const { username, email, password } = req.body;
@@ -17,7 +18,7 @@ handler.post(async (req, res) => {
 
     const newUser = await User.create({ username, email, passwordHash });
 
-    const token = jwt.sign({ id: newUser.id }, '<<<JWT_SECRET>>>');
+    const token = jwt.sign({ id: newUser.id }, JWT_SECRET);
     res.json({ token });
 });
 

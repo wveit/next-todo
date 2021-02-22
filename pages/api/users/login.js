@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 
 const handler = nc();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 handler.post(async (req, res) => {
     const { email, password } = req.body;
@@ -24,7 +25,7 @@ handler.post(async (req, res) => {
             .json({ errors: { credentials: 'Credentials are invalid' } });
     }
 
-    const token = jwt.sign({ id: user.id }, '<<<JWT_SECRET>>>');
+    const token = jwt.sign({ id: user.id }, JWT_SECRET);
     res.json({ token });
 });
 
