@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { NewTodoForm } from '../components/NewTodoForm';
 import { TodoList } from '../components/TodoList';
 import {
@@ -14,47 +14,22 @@ import { AuthButtons } from '../components/AuthButtons';
 import { connect } from 'react-redux';
 import { setUser } from '../redux-slices/user';
 import { setAuthForm } from '../redux-slices/auth-form';
+import { setTodos } from '../redux-slices/todos';
 
-function useTodos(token) {
-    const [todos, setTodos] = useState([]);
-
-    async function handleNewTodo(todo) {
-        if (!token) return;
-        const todos = await postTodo(todo, token);
-        if (!todos.errors) setTodos(todos);
-    }
-
-    async function handleDeleteTodo(todoId) {
-        if (!token) return;
-        const todos = await deleteTodo(todoId, token);
-        if (!todos.errors) setTodos(todos);
-    }
-
-    async function handleTodoUpdate(todoId, update) {
-        if (!token) return;
-        const updatedTodos = await updateTodo(todoId, update, token);
-        if (!todos.errors) setTodos(updatedTodos);
-    }
-
+export function Home({
+    authForm,
+    user,
+    setAuthForm,
+    setUser,
+    todos,
+    handleNewTodo,
+    handleDeleteTodo,
+    handleTodoUpdate,
+    loadTodos,
+}) {
     useEffect(() => {
-        (async function () {
-            if (!token) return;
-            const todos = await getTodos(token);
-            if (!todos.errors) setTodos(todos);
-        })();
-    }, [token]);
-
-    return { todos, handleNewTodo, handleDeleteTodo, handleTodoUpdate };
-}
-
-export function Home({ authForm, user, setAuthForm, setUser }) {
-    const token = user && user.token;
-    const {
-        todos,
-        handleNewTodo,
-        handleDeleteTodo,
-        handleTodoUpdate,
-    } = useTodos(token);
+        if (user) loadTodos();
+    }, [user]);
 
     const categorizedTodos = { active: [], done: [] };
     todos.forEach((todo) => {
@@ -111,16 +86,45 @@ export function Home({ authForm, user, setAuthForm, setUser }) {
     );
 }
 
-function mapStateToProps({ user, authForm }) {
+function mapStateToProps({ user, authForm, todos }) {
     return {
         user,
         authForm,
+        todos,
     };
 }
 
 const mapDispatchToProps = {
     setUser,
     setAuthForm,
+    handleNewTodo(todo) {
+        return async function (dispatch, getState) {
+            const token = getState().user.token;
+            const todos = await postTodo(todo, token);
+            if (!todos.errors) dispatch(setTodos(todos));
+        };
+    },
+    handleDeleteTodo(todoId) {
+        return async function (dispatch, getState) {
+            const token = getState().user.token;
+            const todos = await deleteTodo(todoId, token);
+            if (!todos.errors) dispatch(setTodos(todos));
+        };
+    },
+    handleTodoUpdate(todoId, update) {
+        return async function (dispatch, getState) {
+            const token = getState().user.token;
+            const updatedTodos = await updateTodo(todoId, update, token);
+            if (!updatedTodos.errors) dispatch(setTodos(updatedTodos));
+        };
+    },
+    loadTodos() {
+        return async function (dispatch, getState) {
+            const token = getState().user.token;
+            const todos = await getTodos(token);
+            if (!todos.errors) dispatch(setTodos(todos));
+        };
+    },
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
