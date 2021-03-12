@@ -29,7 +29,7 @@ export function Todo({ todo, onDelete, onUpdate }) {
             <input
                 type='checkbox'
                 checked={!!todo.dateCompleted}
-                onClick={handleDone}
+                onChange={handleDone}
                 className='Todo__doneButton'
             />
             <div className='Todo__title'>{todo.title}</div>
