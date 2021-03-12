@@ -11,6 +11,9 @@ import {
 import { SignInForm } from '../components/SignInForm';
 import { RegisterForm } from '../components/RegisterForm';
 import { AuthButtons } from '../components/AuthButtons';
+import { connect } from 'react-redux';
+import { setUser } from '../redux-slices/user';
+import { setAuthForm } from '../redux-slices/auth-form';
 
 function useTodos(token) {
     const [todos, setTodos] = useState([]);
@@ -44,9 +47,7 @@ function useTodos(token) {
     return { todos, handleNewTodo, handleDeleteTodo, handleTodoUpdate };
 }
 
-export default function Home() {
-    const [authForm, setAuthForm] = useState(null);
-    const [user, setUser] = useState(null);
+export function Home({ authForm, user, setAuthForm, setUser }) {
     const token = user && user.token;
     const {
         todos,
@@ -109,3 +110,17 @@ export default function Home() {
         </>
     );
 }
+
+function mapStateToProps({ user, authForm }) {
+    return {
+        user,
+        authForm,
+    };
+}
+
+const mapDispatchToProps = {
+    setUser,
+    setAuthForm,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
